@@ -8,8 +8,8 @@ from pwn import *;
 from functools import reduce
 
 def testRoots(n):
-	m = (n ** 3 - 1) // (n - 1);
-	return (m % 3 != 0 and isPrime(m));
+	m = n ** 2 + 1;
+	return (m % 4 != 0 and isPrime(m));
 
 # p1 = (10000000000000**4 - 1) // (10000000000000 - 1)
 # p2 = (10000000000004**4 - 1) // (10000000000004 - 1)

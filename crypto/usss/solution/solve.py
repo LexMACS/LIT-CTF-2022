@@ -26,9 +26,9 @@ def mul_inv(a, b):
     if x1 < 0: x1 += b0
     return x1
 
-p1 = (10000000000000017**3 - 1) // (10000000000000017 - 1)
-p2 = (10000000000000076**3 - 1) // (10000000000000076 - 1)
-p3 = (10000000000000092**3 - 1) // (10000000000000092 - 1)
+p1 = (10000000000000124**2 + 1)
+p2 = (10000000000000290**2 + 1)
+p3 = (10000000000000334**2 + 1)
 
 
 def askHash(conn,a,po):
@@ -41,7 +41,7 @@ def askHash(conn,a,po):
 	# return c
 
 def tryHash(b,p):
-	assert(p % 3 != 0);
+	assert(p % 4 != 0);
 	listOfMods = [];
 	while True:
 		# assert(p == (b + 1) * (b * b + 1))
@@ -55,6 +55,7 @@ def tryHash(b,p):
 		# FAIL
 		phi = p - 1;
 		if math.gcd(phi,power) != 1:
+			conn.close();
 			continue;
 
 		# 16% chance this will work, so we need about 6 tries
@@ -63,17 +64,19 @@ def tryHash(b,p):
 		# assert(power * negpower % phi == 1);
 		# print("WHAT " +  str(negpower));
 		tot = askHash(conn,b**0,negpower);
-		tot += askHash(conn,b**1,negpower) * (b ** 2);
-		tot += askHash(conn,b**2,negpower) * (b ** 1);
-		assert(p % 3 != 0);
-		tot = tot * mul_inv(3,p) % p;
+		tot += askHash(conn,b**1,negpower) * (b ** 3);
+		tot += askHash(conn,b**2,negpower) * (b ** 2);
+		tot += askHash(conn,b**3,negpower) * (b ** 1);
+		conn.close();
+		assert(p % 4 != 0);
+		tot = tot * mul_inv(4,p) % p;
 		tot %= p;
 		if(tot in listOfMods):
 			return tot;
 		print(str(len(listOfMods)) + " " + str(tot));
 		listOfMods.append(tot);
 
-l1 = ((tryHash(10000000000000017,p1)))
-l2 = ((tryHash(10000000000000076,p2)))
-l3 = ((tryHash(10000000000000092,p3)))
+l1 = ((tryHash(10000000000000124,p1)))
+l2 = ((tryHash(10000000000000290,p2)))
+l3 = ((tryHash(10000000000000334,p3)))
 print(bytes.fromhex(hex(chinese_remainder([p1,p2,p3],[l1,l2,l3]))[2:]))

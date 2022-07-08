@@ -4,7 +4,7 @@ Welcome = "The United States Secret Service is very confident in our cybersecuri
 print(Welcome);
 
 flag = int(open('flag.txt','rb').read().hex(),16);
-n = 2;
+n = 3;
 p = int(input("Input your favorite mod: "));
 assert(p * p < flag);
 # Multiply matrix a and b mod p
@@ -39,11 +39,15 @@ def randomMatrix(n,p):
 			uwu[i][j] = random.randint(0,p - 1);
 	return uwu;
 
-# Split into two parts
-def randomSplit(tot):
-	partitions = [random.randint(0,tot)];
-	partitions.append(tot - partitions[-1]);
-	return partitions;
+# Divides tot randomly into n parts
+def get_partition(tot,n):
+	partitions = [tot];
+	for i in range(n - 1):
+		partitions.append(random.randint(0,tot));
+	partitions.sort()
+	for i in range(n - 1,0,-1):
+		partitions[i] -= partitions[i - 1];
+	return partitions
 
 # Convolute a matrix mod p with generator x
 def convolute(m,x,p):
@@ -59,7 +63,7 @@ def convolute(m,x,p):
 # Apply initial noise
 matrix = randomMatrix(n,p);
 # Shred the secret into many parts
-shreded = randomSplit(flag);
+shreded = get_partition(flag,n);
 for i in range(n):
 	matrix[i][i] = shreded[i] % p;
 
