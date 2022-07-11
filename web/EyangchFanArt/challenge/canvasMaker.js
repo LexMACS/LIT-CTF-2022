@@ -165,7 +165,6 @@ function generateArt(code,res) {
 	ctx.fillRect(0,0,600,600);
 
 	parseXML(ctx,code,(root) => {
-
 		if(root.error) {
 			ctx.fillStyle = '#FFF';
 			ctx.fillRect(0,0,600,600);
@@ -174,7 +173,7 @@ function generateArt(code,res) {
 			ctx.font = 'bold 10pt Arial';
 			ctx.fillText(root.error,100,100);
 		}
-		res.render("viewart", {img: getBase64(cvs)});
+		res.render("viewart", {img: getBase64(cvs), rick: (root.error != undefined)});
 	})
 
 }
