@@ -37,6 +37,7 @@ except:
     exit()
 
 solution = d.decode()  # decrypted solution
+print(solution)
 
 
 def ROT(ct, s):
