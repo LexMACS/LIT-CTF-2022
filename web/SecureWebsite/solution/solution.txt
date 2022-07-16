@@ -1,0 +1,3 @@
+curl -w "@curl-format.txt" -o NUL -s "http://localhost:8080/verify?password=19958274,8744585,10786309,16830027,18442921,12426322"
+
+Time-based attack, by how much delay the password checker has
