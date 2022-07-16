@@ -20,7 +20,6 @@ function checkPassword(password,pass) {
 	for(var i = 0;i < arr.length;++i) {
 		arr[i] = parseInt(arr[i]);
 	}
-	console.log(arr);
 
 	if(arr.length != password.length) return false;
 	for(var i = 0;i < arr.length;++i) {
@@ -33,7 +32,6 @@ function checkPassword(password,pass) {
 
 function modPow(base,exp,mod) {
 	var result = 1;
-	console.log(exp);
 	for(var i = 0;i < exp;++i) {
 		result = (result * base) % mod;
 	}
