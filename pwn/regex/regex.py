@@ -3,7 +3,7 @@ from pwn import *
 #init
 
 e = ELF('./regex')
-libc = ELF('./libc-2.31.so')
+libc = ELF('./libcs-2.31.so')
 
 p = process(e.path)
 

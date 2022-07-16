@@ -113,8 +113,7 @@ int main(){
 
         puts("Would you like to match another string? (y/N)");
 
-        char c;
-        scanf("%c", &c);
+        char c = getchar();
         getchar();
         puts("");
 
@@ -137,7 +136,7 @@ int main(){
     free(s);
     s = malloc(sz);
 
-    puts("Input your reivew:");
+    puts("Input your review:");
 
     instr(sz);
 
