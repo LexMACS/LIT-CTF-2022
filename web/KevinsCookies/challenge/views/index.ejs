@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Kevin Zhu's favorite cookies</title>
+        <style>
+            .bg{
+                background-image: url("https://lit.lhsmathcs.org/image/KevinZhu.jpeg");
+                background-repeat: repeat;
+                opacity: 0.3;
+                top: 0;
+                left: 0;
+                right: 0;
+                position: absolute;
+                z-index: -1; 
+                height: 300%; 
+            }
+            pre code {
+                background-color: #eee;
+                border: 1px solid #999;
+                display: block;
+                padding: 10px;
+                font-size: 18px;
+            }
+
+            textarea {
+            	width: 50%;
+            	height: 400px;
+                font-size: 18px;
+            }
+
+            .whiteContainer {
+                margin-top: 60px;
+                margin-bottom: 60px;
+                margin-left: 20%;
+                background-color: white;
+                box-shadow: 0 2px 3px rgba(8,8,8,0.1), 0 0 0 1px rgba(8,8,8,0.1);
+                width: 60%;
+                word-break: break-word;
+                word-wrap: break-word;
+                font-size: 18px;
+                color: #404040;
+                text-align: center;
+            }
+        </style> 
+    </head>
+    <body style="margin: 0;padding: 50px 50px 50px 50px;">
+        <div class="bg"></div>
+        <h1>Welcome to My (Kevin Zhu) Cookie 🍪 shop!</h1>
+        <div class="whiteContainer">
+            <br>
+        <% if (likeCookie === "false") { %>
+            <p>I have so many cookies to share with you. Unfortunately, judging from your current cookies, it seems like you do not like any cookies 🍪 :<. Thus I will not bother giving you any</p>
+        <% } else if (likeCookie === "true") { %>
+            <p>Oh silly you. What do you mean you like a true cookie? I have 20 cookies numbered from 1 to 20, and all of them are made from super true authentic recipes.</p>
+        <% } else if (likeCookie === "17") { %>
+            <p>Omg, I too love the 17th cookie. We must share a special connection ❤️! Just for you, I will add something special along with the cookie 🍪, here <b><%= flag %></b>. Don't let the other customers know tho, they won't be happy.</p>
+            <img src="https://cwatch.comodo.com/blog/wp-content/uploads/2020/05/what-are-cookies.png" style="width: 100%">
+        <% } else { %>
+            <p>Hm okay. If you like the cookie number <%- likeCookie %> then here you go I guess. It's not my favorite cookie though</p>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/f/f1/2ChocolateChipCookies.jpg" style="width: 100%">
+        <% } %>
+
+            <br>
+        </div>
+
+    </body>
+</html>
