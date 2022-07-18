@@ -1,0 +1,42 @@
+body {
+	font-family: "Comic Sans MS", "Comic Sans", cursive;
+	margin: 0;
+	background-image: url("https://images.fineartamerica.com/images/artworkimages/mediumlarge/2/glittery-background-merrymoonmary.jpg");
+}
+
+
+.intro {
+	font-size: 20px;
+}
+
+.beginning {
+	background-color: yellow;
+	margin-top: 50px;
+	margin-bottom: 50px;
+	padding-top: 50px;
+	padding-bottom: 50px;
+	text-align: center;
+}
+
+
+.middle {
+	background-color: pink;
+	margin-top: 50px;
+	margin-bottom: 50px;
+	padding-top: 50px;
+	padding-bottom: 50px;
+	text-align: center;
+}
+
+.secret {
+	/* _i5_s0_OTZ_0TZ_OFZ_4t_ */
+	font-size: 50px;
+
+}
+.secretButton {
+	background-color: orange;
+	border-width: 5px;
+	margin-top: 50px;
+	margin-left: 50px;
+}
+
