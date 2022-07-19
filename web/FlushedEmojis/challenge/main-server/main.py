@@ -20,7 +20,7 @@ def login():
     if('.' in password):
       return render_template_string("lmao no way you have . in your password LOL");
 
-    r = requests.post('[Other server IP]', json={"username": alphanumericalOnly(username),"password": alphanumericalOnly(password)}); 
+    r = requests.post('[Other server IP]/runquery', json={"username": alphanumericalOnly(username),"password": alphanumericalOnly(password)}); 
     print(r.text);
     if(r.text == "True"):
       return render_template_string("OMG you are like so good at guessing our flag I am lowkey jealoussss.");
