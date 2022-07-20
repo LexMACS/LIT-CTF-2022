@@ -1,0 +1,1 @@
+gcc -o happyrop -Wl,-z,relro,-z,now -fstack-protector-all happyrop.c -pthread

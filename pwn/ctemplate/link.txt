@@ -1,0 +1,1 @@
+patchelf --set-interpreter ./ld-2.31.so --add-needed ./libcs-2.31.so ./ctemplate

@@ -1,1 +1,1 @@
-patchelf --set-interpreter ./ld-2.33.so --add-needed ./libc-2.33.so ./intarray
+patchelf --set-interpreter ./ld-2.31.so --add-needed ./libc-2.31.so --add-needed ./libpthread-2.31.so ./intarray
