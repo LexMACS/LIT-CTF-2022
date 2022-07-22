@@ -27,7 +27,7 @@ void aradd(ll a[]){
     
     int idx = safeint();
 
-    if(idx < 0 || idx >= 0x200) invalid("index, it ain't that secure but you can't write anywhere");
+    if(idx < 0 || idx >= 0x1000) invalid("index, it ain't that secure but you can't write anywhere");
 
     puts("Input the value you'd like to add:");
 
@@ -69,8 +69,8 @@ void *happyrop(void *args){
     for(int i = 0; i < 6; i++){
     	puts("Would you like to add another value? (y/N)");
 
-	char c[0x300];
-	c[read(0, c, 0x300) - 0x1] = '\0';
+	char c[0x400];
+	c[read(0, c, 0x400) - 0x1] = '\0';
 	puts("");
 
 	if(!strcmp(c, "y") || !strcmp(c, "Y")) aradd(a);

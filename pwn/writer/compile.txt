@@ -1,0 +1,1 @@
+gcc -o writer -no-pie writer.c -lseccomp
