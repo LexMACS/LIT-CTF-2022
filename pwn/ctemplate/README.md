@@ -1,7 +1,7 @@
 CTemplate
 Rythm
 
-A clown problem.
+This is only to use as a problem template. Please do not setup eyang!!
 
 Connect with "".
 

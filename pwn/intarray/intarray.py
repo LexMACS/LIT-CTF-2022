@@ -7,8 +7,8 @@ libp = ELF('./libpthread-2.31.so')
 libc = ELF('./libcs-2.31.so')
 ld = ELF('./ld-2.31.so')
 
-p = process(e.path)
-#p = remote()
+#p = process(e.path)
+p = remote('159.89.254.233', 31784)
 
 #funcs
 

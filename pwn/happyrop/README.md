@@ -1,7 +1,9 @@
-IntArray
-Rythm
+HappyRop  
+Rythm  
 
-Ever just want to store some ints?
+Just a happy rop problem.  
+
+Note: flag is not in normal flag file.  
 
 Connect with "".
 

