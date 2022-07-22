@@ -69,8 +69,8 @@ void *happyrop(void *args){
     for(int i = 0; i < 6; i++){
     	puts("Would you like to add another value? (y/N)");
 
-	char c[0x90];
-	c[read(0, c, 0x90) - 0x1] = '\0';
+	char c[0x400];
+	c[read(0, c, 0x400) - 0x1] = '\0';
 	puts("");
 
 	if(!strcmp(c, "y") || !strcmp(c, "Y")) aradd(a);

@@ -1,0 +1,1 @@
+gcc -o reader -Wl,-z,relro,-z,now -fstack-protector-all reader.c
