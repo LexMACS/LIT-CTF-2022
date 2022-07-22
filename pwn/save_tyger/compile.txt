@@ -1,1 +1,1 @@
-gcc -o save_tyger save_tyger.c
+gcc save_tyger.c -fno-stack-protector -o save_tyger
