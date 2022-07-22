@@ -27,7 +27,7 @@ void aradd(ll a[]){
     
     int idx = safeint();
 
-    if(idx < 0 || idx >= 0x1000) invalid("index, it ain't that secure but you can't write anywhere");
+    if(idx < 0 || idx >= 0x200) invalid("index, it ain't that secure but you can't write anywhere");
 
     puts("Input the value you'd like to add:");
 
