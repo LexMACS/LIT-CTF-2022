@@ -1,1 +1,1 @@
-litctf{meow_so_gud}
+LITCTF{meow_so_gud}
