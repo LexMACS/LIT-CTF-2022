@@ -1,0 +1,18 @@
+<component name="clown">
+<component name="parent">
+<component name="flag">
+<component name="literals">
+<component name="0">
+<component name="innerText">
+<component name="0"> <!-- this is the ith character -->
+<component name="?"> <!-- this is the character that we want to check -->
+
+</component>
+</component>
+</component>
+</component>
+</component>
+</component>
+</component>
+</component>
+
